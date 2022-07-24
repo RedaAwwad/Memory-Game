@@ -1,19 +1,9 @@
-function sum(a: number, b: number): number {
-  return a + b;
+import { sayHey } from "./classes/Block";
+
+sayHey();
+
+function print(keyword: string): void {
+  console.log(keyword, "\n working well wow (:");
 }
 
-
-
-console.log(sum(2, 5));
-
-
-function logMyName(name: string): void {
-  console.log(name);
-}
-
-
-logMyName('Reda Awwad');
-
-
-// to fix duplicate function implementation error in TypeScript
-export {};
+print('Welcome from main script!');

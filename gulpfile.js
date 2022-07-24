@@ -1,28 +1,27 @@
 const { src, dest, watch, series } = require("gulp");
+const browserify = require('browserify');
+const tsify = require('tsify');
+const source = require('vinyl-source-stream');
+const sourcemaps = require('gulp-sourcemaps');
+const buffer = require("vinyl-buffer");
+const terser = require("gulp-terser");
 const sass = require('gulp-sass')(require('sass'))
 const minifyCSS = require("gulp-clean-css");
 const autoprefixer = require("gulp-autoprefixer");
-const sourcemaps = require('gulp-sourcemaps');
-const ts = require('gulp-typescript');
-const minifyJS = require("gulp-terser");
 const imagemin = require("gulp-imagemin");
 const { mozjpeg, optipng, svgo} = imagemin;
 const webp = require("gulp-webp");
 const clean = require('gulp-clean');
 const rename = require("gulp-rename");
-const concat = require('gulp-concat');
 const browserSync = require('browser-sync').create();
 
 const PATHS = {
   dist: './dist',
-  html: './*.html',
-  sass: './src/assets/scss/**/*.scss',
+  html: './src/*.html',
   js: [
-    // files need to be in order
-    './src/app/classes/BlockElement.ts',
-    './src/app/classes/Block.ts',
     './src/app/main.ts',
   ],
+  sass: './src/assets/scss/**/*.scss',
   imgs: './src/assets/imgs/*'
 }
 
@@ -39,6 +38,31 @@ const moveHTMLFiles = () => {
   .pipe(browserSync.stream());
 }
 
+// js
+const compileJS = () => {
+  let b = browserify({
+    basedir: ".",
+    debug: true,
+    entries: PATHS['js'],
+    cache: {},
+    packageCache: {},
+  })
+  .plugin(tsify)
+  .transform("babelify", {
+    presets: ["es2015"],
+    extensions: [".ts"],
+  });
+
+  return b.bundle()
+    .pipe(source("main.bundle.js"))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(terser())
+    .pipe(sourcemaps.write())
+    .pipe(dest(`${PATHS['dist']}/assets/js`))
+    .pipe(browserSync.stream());
+}
+
 // sass
 const compileSass = () => {
   return src(PATHS['sass'], { 'allowEmpty': true })
@@ -53,18 +77,6 @@ const compileSass = () => {
     path.basename += ".min";
   }))
   .pipe(dest(`${PATHS['dist']}/assets/css`))
-  .pipe(browserSync.stream());
-}
-
-// js
-const compileJS = () => {
-  return src(PATHS['js'], { 'allowEmpty': true })
-  .pipe(sourcemaps.init())
-  .pipe(ts({ module: 'umd', target: 'ES5' }))
-  .pipe(concat('main.min.js'))
-  .pipe(minifyJS())
-  .pipe(sourcemaps.write())
-  .pipe(dest(`${PATHS['dist']}/assets/js`))
   .pipe(browserSync.stream());
 }
 
@@ -117,8 +129,8 @@ const watchTasks = () => {
 exports.default = series(
   cleanDist,
   moveHTMLFiles,
-  compileSass,
   compileJS,
+  compileSass,
   minifyImgs,
   webpImgs,
   watchTasks
@@ -128,8 +140,8 @@ exports.default = series(
 exports.build = series(
   cleanDist,
   moveHTMLFiles,
-  compileJS,
   compileSass,
+  compileJS,
   minifyImgs,
   webpImgs
 );

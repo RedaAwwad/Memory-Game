@@ -1,1 +1,3 @@
-console.log('from block');
+export const sayHey = (): void => {
+  console.log('Hey from block!');
+}
