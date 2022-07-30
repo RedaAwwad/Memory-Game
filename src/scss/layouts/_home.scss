@@ -1,0 +1,38 @@
+// Home page styles
+@use '../abstracts' as *;
+
+h1 {
+  padding: 1rem;
+  color: $main;
+  font-weight: 900;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.game {
+  &__info {
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+    
+    h3 {
+      min-width: 6rem;
+      padding: 0.5rem;
+      border-radius: 5px;
+      box-shadow: $shadow;
+    }
+  }
+
+  &__blocks {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+
+.developer {
+  padding: 1rem;
+
+  &__account {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+  }
+}

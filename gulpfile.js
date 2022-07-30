@@ -19,23 +19,46 @@ const PATHS = {
   dist: './dist',
   html: './src/*.html',
   js: [
-    './src/app/main.ts',
+    './src/js/main.ts',
   ],
-  sass: './src/assets/scss/**/*.scss',
-  imgs: './src/assets/imgs/*'
+  sass: './src/scss/**/*.scss',
+  imgs: './src/assets/imgs/*',
+  bootstrap_icons: () => {
+    const bootstrapIconsToInclude = [
+      'youtube', 'wordpress',
+      'windows', 'wifi',
+      'whatsapp', 'webcam',
+      'wallet', 'vimeo',
+      'usb', 'twitter'
+    ]
+    return bootstrapIconsToInclude.map(icon => {
+      return `./node_modules/bootstrap-icons/icons/${icon}.svg`
+    });
+  },
+  sounds: './src/assets/sounds/*'
 }
 
 // clean
 const cleanDist = () => {
-  return src(`${PATHS['dist']}/`, { 'allowEmpty': true, read: false })
-  .pipe(clean({ force: true }));
+  return src(`${PATHS['dist']}/`, { 
+      allowEmpty: true, 
+      read: false 
+    })
+    .pipe(clean({ force: true }));
 }
 
 // move html files
-const moveHTMLFiles = () => {
-  return src(PATHS['html'], { 'allowEmpty': true })
-  .pipe(dest(PATHS['dist']))
-  .pipe(browserSync.stream());
+const moveHTML = () => {
+  return src(PATHS['html'], { allowEmpty: true })
+    .pipe(dest(PATHS['dist']))
+    .pipe(browserSync.stream());
+}
+
+// move Sounds files
+const moveSounds = () => {
+  return src(PATHS['sounds'], { allowEmpty: true })
+    .pipe(dest(`${PATHS['dist']}/assets/sounds`))
+    .pipe(browserSync.stream());
 }
 
 // js
@@ -47,7 +70,9 @@ const compileJS = () => {
     cache: {},
     packageCache: {},
   })
-  .plugin(tsify)
+  .plugin(tsify).on('error', (err) => {
+    console.error(err);
+  })
   .transform("babelify", {
     presets: ["es2015"],
     extensions: [".ts"],
@@ -59,57 +84,57 @@ const compileJS = () => {
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(terser())
     .pipe(sourcemaps.write())
-    .pipe(dest(`${PATHS['dist']}/assets/js`))
+    .pipe(dest(`${PATHS['dist']}/js`))
     .pipe(browserSync.stream());
 }
 
 // sass
 const compileSass = () => {
-  return src(PATHS['sass'], { 'allowEmpty': true })
-  .pipe(sourcemaps.init())
-  .pipe(sass())
-  .pipe(autoprefixer({ 
-    grid: 'autoplace' 
-  }))
-  .pipe(minifyCSS())
-  .pipe(sourcemaps.write())
-  .pipe(rename(path => {
-    path.basename += ".min";
-  }))
-  .pipe(dest(`${PATHS['dist']}/assets/css`))
-  .pipe(browserSync.stream());
+  return src(PATHS['sass'], { allowEmpty: true })
+    .pipe(sourcemaps.init())
+    .pipe(sass())
+    .pipe(autoprefixer({ 
+      grid: 'autoplace' 
+    }))
+    .pipe(minifyCSS())
+    .pipe(sourcemaps.write())
+    .pipe(rename(path => {
+      path.basename += ".min";
+    }))
+    .pipe(dest(`${PATHS['dist']}/css`))
+    .pipe(browserSync.stream());
 }
 
 // minify imgs
 const minifyImgs = () => {
-  return src(PATHS['imgs'], { 'allowEmpty': true })
-  .pipe(imagemin([
-    mozjpeg({ quality: 70, progressive: true }),
-    optipng({ optimizationLevel: 5 }),
-    svgo({
-      plugins: [
-        {
-          name: 'removeViewBox',
-          active: true
-        },
-        {
-          name: 'cleanupIDs',
-          active: false
-        }
-      ]})
-    ]))
-  .pipe(dest(`${PATHS['dist']}/assets/imgs`))
-  .pipe(browserSync.stream());
+  return src(PATHS['bootstrap_icons'](), { allowEmpty: true })
+    .pipe(imagemin([
+      mozjpeg({ quality: 70, progressive: true }),
+      optipng({ optimizationLevel: 5 }),
+      svgo({
+        plugins: [
+          {
+            name: 'removeViewBox',
+            active: true
+          },
+          {
+            name: 'cleanupIDs',
+            active: false
+          }
+        ]})
+      ]))
+    .pipe(dest(`${PATHS['dist']}/assets/icons`))
+    .pipe(browserSync.stream());
 }
 
 // transform imgs to webp ext.
-const webpImgs = () => {
-  let minifiedImgs = `${PATHS['dist']}/assets/imgs`;
-  return src(`${minifiedImgs}/*`, { 'allowEmpty': true })
-  .pipe(webp())
-  .pipe(dest(minifiedImgs))
-  .pipe(browserSync.stream());
-}
+// const webpImgs = () => {
+//   let minifiedImgs = `${PATHS['dist']}/assets/icons`;
+//   return src(`${minifiedImgs}/*`, { allowEmpty: true })
+//     .pipe(webp())
+//     .pipe(dest(minifiedImgs))
+//     .pipe(browserSync.stream());
+// }
 
 // watch
 const watchTasks = () => {
@@ -119,29 +144,32 @@ const watchTasks = () => {
     }
   });
 
-  watch(PATHS['html'], moveHTMLFiles);
+  watch(PATHS['html'], moveHTML);
+  watch(PATHS['sounds'], moveSounds);
   watch(PATHS['sass'], compileSass);
-  watch('./src/app/**/*.ts', compileJS);
+  watch('./src/js/**/*.ts', compileJS);
   watch(PATHS['imgs'], minifyImgs);
 }
 
 // default
 exports.default = series(
   cleanDist,
-  moveHTMLFiles,
+  moveHTML,
+  moveSounds,
   compileJS,
   compileSass,
   minifyImgs,
-  webpImgs,
+  // webpImgs,
   watchTasks
 );
 
 // build
 exports.build = series(
   cleanDist,
-  moveHTMLFiles,
+  moveHTML,
+  moveSounds,
   compileSass,
   compileJS,
   minifyImgs,
-  webpImgs
+  // webpImgs
 );

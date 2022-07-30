@@ -1,0 +1,22 @@
+@use '../abstracts' as *;
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 4rem;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: transparent;
+  outline-color: transparent;
+  cursor: pointer;
+
+  &-brand {
+    color: $white;
+    background-color: $main;
+    border-color: $main;
+    outline-color: $main;
+  }
+
+  &:hover {
+    box-shadow: $shadow;
+  }
+}
