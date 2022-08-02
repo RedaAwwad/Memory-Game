@@ -49,11 +49,13 @@ export default class UI {
   static showModal(id: string): void {
     const modal = <HTMLElement>document.querySelector(`#${id}Modal`);
     modal.style.display = 'flex';
+    document.querySelector('body').style.overflow = 'hidden';
   }
   
   static hideModal(id: string): void {
     const modal = <HTMLElement>document.querySelector(`#${id}Modal`);
     modal.style.display = 'none';
+    document.querySelector('body').style.overflow = 'auto';
   }
 
 

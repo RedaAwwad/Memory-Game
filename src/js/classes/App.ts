@@ -1,8 +1,9 @@
-import { Member } from './../helpers/types';
+import { Member, block } from './../helpers/types';
 import UI from './UI';
 
 export default class App {
   static gameOverRetries: number = 7;
+  static prevBlock: block | null;
 
   static init() {
     UI.displayBlocks();
@@ -14,14 +15,17 @@ export default class App {
   }
 
   static gameOver(): void {
+    App.fireSound('over');
 
   }
 
   static playerWon():void {
+    App.fireSound('won');
 
   }
 
   static restartGame(player: Member): void {
+    App.fireSound('welcome');
     UI.resetBlocks();
     player.resetInfo();
   }
