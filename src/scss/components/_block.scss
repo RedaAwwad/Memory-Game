@@ -10,10 +10,15 @@
   flex: 1 0 $block_helight;
   margin: 0 10px 20px;
   transform-style: preserve-3d;
-  // border: 5px solid $darker;
+  
+  @media screen and (max-width: 580px) {
+    height: 8rem;
+    width: 10rem;
+    flex: 1 0 8rem;
+  }
 
-  &:hover,
-  &.flip {
+  // &:hover,
+  &.flipped {
     transform: rotateY(180deg);
     box-shadow: $shadow;
   }
@@ -54,7 +59,7 @@
   }
 
   &__img {
-    width: 6.25rem;
-    height: 6.25rem;
+    width: 5rem;
+    height: 5rem;
   }
 }

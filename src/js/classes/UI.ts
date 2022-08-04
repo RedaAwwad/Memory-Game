@@ -1,8 +1,6 @@
-import { block } from './../helpers/types';
+import { blockType } from './../helpers/types';
 import storedData from "../helpers/data";
 import Block from "./Block";
-
-const container = <HTMLElement>document.querySelector('#blockContainer');
 
 export default class UI {
 
@@ -10,8 +8,8 @@ export default class UI {
     return Math.floor(Math.random() * (max + 1));
   }
 
-  private static orderDataRandomly(): block[] {
-    const orderedData: block[] = [];
+  private static orderDataRandomly(): blockType[] {
+    const orderedData: blockType[] = [];
     const includedData: number[] = []; 
     
     while (orderedData.length < 20) {
@@ -35,28 +33,46 @@ export default class UI {
     
     blocksData.forEach(block => {
       let blockEle = Block.create(block);
-      container.appendChild(blockEle);
+      document.querySelector('#blockContainer').appendChild(blockEle);
     });
   }
 
   static resetBlocks(): void {
-    if(container.childNodes.length)
-      container.innerHTML = '';
+    const blocks = Array.from(document.querySelectorAll('.game-block'));
+    let orders: number[] = Array.from({length: 20}, (v, i) => i + 1);
+    orders = orders.sort((a, b) => 0.5 - Math.random());
 
-    UI.displayBlocks();
+    blocks.forEach((block, index) => {
+      const ele = <HTMLElement>block;
+      if(ele.classList.contains('flipped'))
+      ele.classList.remove('flipped');
+
+      ele.style.order = `${orders[index]}`;
+    });
   }
 
   static showModal(id: string): void {
     const modal = <HTMLElement>document.querySelector(`#${id}Modal`);
-    modal.style.display = 'flex';
+    if(!modal) return;
+
+    modal.classList.remove('hidden');
     document.querySelector('body').style.overflow = 'hidden';
   }
   
-  static hideModal(id: string): void {
-    const modal = <HTMLElement>document.querySelector(`#${id}Modal`);
-    modal.style.display = 'none';
+  static hideModal(id: string | null): void {
+    if(id) {
+      const modal = <HTMLElement>document.querySelector(`#${id}Modal`);
+      if(!modal) return;
+
+      modal.classList.add('hidden');
+    } else {
+      // hide any active modal
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.classList.add('hidden');
+      });
+    }
+
     document.querySelector('body').style.overflow = 'auto';
   }
-
 
 }

@@ -1,20 +1,12 @@
-export type block = {
+export type blockType = {
   id: number;
   icon: string
 }
 
-export interface Member {
+export interface playerInterface {
   displayInfo(): void;
   resetInfo(): void;
+  checkRetries(): void;
   updateRetries(): void;
   updateScore(): void;
 }
-
-export type storage = {
-  player: {
-    name: string;
-    score: number;
-    retries: number;
-  }
-  blocks: [block]
-} 

@@ -19,6 +19,15 @@ h1 {
       border-radius: 5px;
       box-shadow: $shadow;
     }
+
+    @media screen and (max-width: 580px) {
+      flex-wrap: wrap;
+
+      h3:first-child {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+    }
   }
 
   &__blocks {
@@ -31,6 +40,7 @@ h1 {
 
 .developer {
   padding: 1rem;
+  font-size: 0.8rem;
 
   &__account {
     margin-right: 0.5rem;

@@ -1,11 +1,12 @@
-import { Member } from "../helpers/types";
-import App from "./App";
+import { playerInterface } from './../helpers/types';
+import Game from "./Game";
+import UI from './UI';
 
 const nameContainer = <HTMLElement> document.querySelector('#playerName');
 const scoreContainer = <HTMLElement> document.querySelector('#playerScore');
 const retriesContainer = <HTMLElement> document.querySelector('#playerRetries');
 
-export default class Player implements Member {
+export default class Player implements playerInterface {
   private tries: number;
   private score: number;
 
@@ -24,7 +25,7 @@ export default class Player implements Member {
     retriesContainer.innerHTML = `
       <span>Retries: </span>
       <span class="text-brand">${this.tries}</span> /
-      <span>${App.gameOverRetries}</span>
+      <span>${Game.maxRetries}</span>
     `;
   }
 
@@ -35,11 +36,27 @@ export default class Player implements Member {
     this.displayInfo();
   }
 
-  updateRetries(): void {
+  checkRetries(): boolean {
+    let isOver = Game.maxRetries === this.tries;
+
+    if(isOver)
+      Game.over();
     
+    return isOver;
+  }
+
+  updateRetries(): void {
+    this.tries++;
+    this.displayInfo();
   }
 
   updateScore(): void {
-    
+    if(this.score < 10) {
+      this.score++;
+      this.displayInfo();
+    }
+
+    if(this.score === 10)
+      Game.won();
   }
 }

@@ -1,4 +1,5 @@
-import App from "./App";
+import Game from "./Game";
+import Player from './Player';
 
 export default class Block {
   
@@ -18,36 +19,32 @@ export default class Block {
     return div;
   }
 
-  static flip(event: Event): void {
-    let ele = <HTMLElement> event.target;
-    let flipped = ele.classList.contains('flip');
+  static flip(ele: HTMLElement, player: Player): void {
+    
+    let flipped = ele.classList.contains('flipped');
     let id = parseInt(ele.dataset.id);
     let name = ele.dataset.name;
-    let currentBlock = document.querySelector(`[data-id="${id}"]`);
-    let prevBlock = App.prevBlock;
+    let prevBlock = Game.prevBlock;
 
-    if(flipped || (prevBlock.id == id)) return;
+    if(flipped || Game.isGameBlocked) return;
 
-    if(prevBlock) {
-      if(name !== prevBlock.icon) {
-        App.prevBlock = null;
-        App.fireSound('fail');
+    ele.classList.add('flipped');
+    Game.isGameBlocked = true;
 
-        currentBlock.classList.remove('flip');
-        document.querySelector(`[data-name="${prevBlock.icon}"]`)
-        .classList.remove('flip');
-
-        return;
-      }
-
-      App.fireSound('success');
-      App.prevBlock = null;
-      currentBlock.classList.add('flip');
-      return
+    // first block checked
+    if(!prevBlock) {
+      Game.prevBlock = { id, icon: name };
+      Game.isGameBlocked = false;
+      return;
     }
-    
-    currentBlock.classList.add('flip');
-    App.prevBlock = { id, icon: name };
-    // App.fireSound('welcome');
+
+    // blocks checking faild
+    if(name !== prevBlock.icon) {
+      Game.fail(player, ele);
+      return;
+    }
+
+    // blocks checking successed
+    Game.success(player);
   }
 };

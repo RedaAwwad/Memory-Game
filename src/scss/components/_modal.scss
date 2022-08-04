@@ -11,6 +11,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: 300ms cubic-bezier(.2,0,.38,.9);
 
   &__content {
     width: 500px;
