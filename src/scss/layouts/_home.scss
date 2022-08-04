@@ -43,7 +43,15 @@ h1 {
   font-size: 0.8rem;
 
   &__account {
-    margin-right: 0.5rem;
     margin-left: 0.5rem;
+    padding: 0.5rem;
+
+    &:first-child {
+      color: #0077B5;
+    }
+
+    &:last-child {
+      color: #000000;
+    }
   }
 }
