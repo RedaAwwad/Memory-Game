@@ -3,7 +3,7 @@
 
 ### Preview
 
-[MemoryGame](https://mymemorygameapp.herokuapp.com/)
+[MemoryGame](https://mymemorygameapp.netlify.app/)
 
 ### Build Setup
 
