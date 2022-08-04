@@ -5,7 +5,7 @@ import UI from './UI';
 export default class Game {
   static prevBlock: blockType | null;
   static isGameBlocked: boolean = false;
-  static maxRetries: number = 22;
+  static maxRetries: number = 15;
 
 
   static init(): void {
