@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "gulp",
     "build": "gulp build",
-    "start": "node"
+    "start": "node app",
+    "postinstall": "gulp default"
   },
   "repository": {
     "type": "git",
