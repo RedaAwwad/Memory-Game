@@ -1,7 +1,7 @@
 
 # Memory Game
 
-### Preview
+### Demo
 
 [MemoryGame](https://mymemorygameapp.netlify.app/)
 
