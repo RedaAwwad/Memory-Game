@@ -2,11 +2,11 @@
   "name": "memorygame",
   "version": "1.0.0",
   "description": "A memory game web application",
-  "main": "dist/assets/js/main.bundle.js",
+  "main": "dist/",
   "scripts": {
     "dev": "gulp",
     "build": "gulp build",
-    "start": "node ./dist/"
+    "start": "node"
   },
   "repository": {
     "type": "git",
