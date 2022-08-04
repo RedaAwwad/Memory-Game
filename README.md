@@ -1,9 +1,7 @@
 
 # Memory Game
 
-### Demo
-
-[MemoryGame](https://mymemorygameapp.netlify.app/)
+[Demo](https://mymemorygameapp.netlify.app/)
 
 ### Build Setup
 
