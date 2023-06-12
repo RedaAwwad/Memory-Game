@@ -16,7 +16,7 @@ const rename = require("gulp-rename");
 const browserSync = require('browser-sync').create();
 
 const PATHS = {
-  dist: './dist',
+  dist: './public',
   html: './src/*.html',
   js: [
     './src/js/main.ts',
