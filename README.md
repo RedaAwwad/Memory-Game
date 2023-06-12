@@ -1,7 +1,7 @@
 
 # Memory Game
 
-[Demo](https://mymemorygameapp.netlify.app/)
+[Demo](https://memory-game-28h6l8n1b-redaawaad.vercel.app/)
 
 ### Build Setup
 
