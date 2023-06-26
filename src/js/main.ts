@@ -1,44 +1,34 @@
-import App from './classes/Game';
-import UI from './classes/UI';
-import Player from './classes/Player';
-import Block from './classes/Block';
-import Game from './classes/Game';
+import { Game, UI, Player, Block } from './classes';
+const form = document.querySelector('#formData') as HTMLFormElement;
+const tryButton = document.querySelector('#try-again') as HTMLButtonElement;
+const playButton = document.querySelector('#play-again') as HTMLButtonElement;
+let player: Player = null;
 
-let player: Player;
-
-// init app
-document.addEventListener('DOMContentLoaded', () => {
-  App.init();
+function init() {
+  Game.init();
 
   // check blocks
-  document.querySelectorAll('.game-block').forEach(block => {
-    block.addEventListener('click', () => Block.flip(<HTMLElement>block, player));
+  document.querySelectorAll('.game-block').forEach((block) => {
+    block.addEventListener('click', () => Block.flip(block as HTMLElement, player));
   });
 
-  // try again
-  document.querySelector('#try-again').addEventListener('click', () => {
-    Game.restart(player);
-  });
+  tryButton.addEventListener('click', () => Game.restart(player)); // try again
+  playButton.addEventListener('click', () => Game.restart(player)); // play again
+}
 
-  // play again
-  document.querySelector('#play-again').addEventListener('click', () => {
-    Game.restart(player);
-  });
-});
-
-// init player
-const form = <HTMLFormElement> document.querySelector('#formData');
-form.addEventListener('submit', (e) => {
+function submitName(e: Event) {
   e.preventDefault();
 
-  const input = <HTMLInputElement>form.getElementsByClassName('player-name')[0];
+  const playerNameInput = form.getElementsByClassName('player-name')[0] as HTMLInputElement;
 
-  if(input.value) {
-    player = new Player(input.value);
-    player.displayInfo();
-
+  if (playerNameInput.value) {
+    player = new Player(playerNameInput.value);
+    UI.updatePlayerInfo(player.getInfo());
     UI.hideModal('welcome');
   }
-});
+}
+
+document.addEventListener('DOMContentLoaded', init); // Init Game
+form.addEventListener('submit', submitName); // Init Player
 
 

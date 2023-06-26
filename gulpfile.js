@@ -131,7 +131,7 @@ const minifyImgs = () => {
 const watchTasks = () => {
   browserSync.init({
     server: {
-      baseDir: "./dist/"
+      baseDir: PATHS['dist']
     }
   });
 

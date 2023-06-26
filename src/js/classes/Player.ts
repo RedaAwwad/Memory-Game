@@ -1,62 +1,52 @@
-import { playerInterface } from './../helpers/types';
+import { Player as PlayerType } from '../../../types';
 import Game from "./Game";
 import UI from './UI';
 
-const nameContainer = <HTMLElement> document.querySelector('#playerName');
-const scoreContainer = <HTMLElement> document.querySelector('#playerScore');
-const retriesContainer = <HTMLElement> document.querySelector('#playerRetries');
-
-export default class Player implements playerInterface {
+export default class Player {
   private tries: number;
   private score: number;
 
-  constructor(private name: string) {
+  constructor (private name: string) {
     this.tries = 0;
     this.score = 0;
   }
 
-  displayInfo(): void {
-    nameContainer.textContent = this.name;
-    scoreContainer.innerHTML = `
-      <span>Score: </span>
-      <span class="text-brand">${this.score}</span> /
-      <span>10</span>
-    `;
-    retriesContainer.innerHTML = `
-      <span>Retries: </span>
-      <span class="text-brand">${this.tries}</span> /
-      <span>${Game.maxRetries}</span>
-    `;
+  getInfo(): PlayerType {
+    return {
+      name: this.name,
+      tries: this.tries,
+      score: this.score,
+    };
   }
 
   resetInfo(): void {
     this.tries = 0;
     this.score = 0;
 
-    this.displayInfo();
+    UI.updatePlayerInfo(this.getInfo());
   }
 
   checkRetries(): boolean {
     let isOver = Game.maxRetries === this.tries;
 
-    if(isOver)
+    if (isOver)
       Game.over();
-    
+
     return isOver;
   }
 
   updateRetries(): void {
     this.tries++;
-    this.displayInfo();
+    UI.updatePlayerInfo(this.getInfo());
   }
 
   updateScore(): void {
-    if(this.score < 10) {
+    if (this.score < 10) {
       this.score++;
-      this.displayInfo();
+      UI.updatePlayerInfo(this.getInfo());
     }
 
-    if(this.score === 10)
+    if (this.score === 10)
       Game.won();
   }
 }

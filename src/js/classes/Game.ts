@@ -1,4 +1,4 @@
-import { blockType } from '../helpers/types';
+import { blockType } from '../../../types';
 import Player from './Player';
 import UI from './UI';
 
@@ -20,12 +20,12 @@ export default class Game {
 
   static fail(player: Player, ele: HTMLElement): void {
     const flippedBlocks = document.querySelectorAll(`[data-name="${Game.prevBlock.icon}"]`);
-        
+
     Game.prevBlock = null;
 
     player.updateRetries();
 
-    if(player.checkRetries()) return;
+    if (player.checkRetries()) return;
 
     setTimeout(() => {
       ele.classList.remove('flipped');
@@ -52,7 +52,7 @@ export default class Game {
     });
   }
 
-  static won():void {
+  static won(): void {
     UI.showModal('success');
     Game.fireSound('won');
     document.querySelector('body').scrollTo({
