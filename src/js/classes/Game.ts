@@ -1,9 +1,9 @@
-import { blockType } from '../../../types';
+import { Block } from '../../types';
 import Player from './Player';
 import UI from './UI';
 
 export default class Game {
-  static prevBlock: blockType | null;
+  static prevBlock: Block | null;
   static isGameBlocked: boolean = false;
   static maxRetries: number = 15;
 

@@ -1,4 +1,4 @@
-import { Player as PlayerType } from '../../../types';
+import { Player as PlayerType } from '../../types';
 import Game from "./Game";
 import UI from './UI';
 

@@ -2,8 +2,8 @@ import Game from "./Game";
 import Player from './Player';
 
 export default class Block {
-  
-  static create (blockInfo: {id: number; icon: string}): HTMLElement {
+
+  static create(blockInfo: { id: number; icon: string; }): HTMLElement {
     const div = document.createElement('div');
     div.className = 'game-block';
     div.setAttribute('data-id', JSON.stringify(blockInfo.id));
@@ -20,26 +20,26 @@ export default class Block {
   }
 
   static flip(ele: HTMLElement, player: Player): void {
-    
-    let flipped = ele.classList.contains('flipped');
-    let id = parseInt(ele.dataset.id);
-    let name = ele.dataset.name;
+
+    let flipped: boolean = ele.classList.contains('flipped');
+    let id: number = parseInt(ele.dataset.id);
+    let name: string = ele.dataset.name;
     let prevBlock = Game.prevBlock;
 
-    if(flipped || Game.isGameBlocked) return;
+    if (flipped || Game.isGameBlocked) return;
 
     ele.classList.add('flipped');
     Game.isGameBlocked = true;
 
     // first block checked
-    if(!prevBlock) {
+    if (!prevBlock) {
       Game.prevBlock = { id, icon: name };
       Game.isGameBlocked = false;
       return;
     }
 
     // blocks checking faild
-    if(name !== prevBlock.icon) {
+    if (name !== prevBlock.icon) {
       Game.fail(player, ele);
       return;
     }

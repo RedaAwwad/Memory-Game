@@ -8,7 +8,7 @@ function init() {
   Game.init();
 
   // check blocks
-  document.querySelectorAll('.game-block').forEach((block) => {
+  document.querySelectorAll('.game-block').forEach(block => {
     block.addEventListener('click', () => Block.flip(block as HTMLElement, player));
   });
 
@@ -16,7 +16,7 @@ function init() {
   playButton.addEventListener('click', () => Game.restart(player)); // play again
 }
 
-function submitName(e: Event) {
+function submitPlayerName(e: Event) {
   e.preventDefault();
 
   const playerNameInput = form.getElementsByClassName('player-name')[0] as HTMLInputElement;
@@ -29,6 +29,6 @@ function submitName(e: Event) {
 }
 
 document.addEventListener('DOMContentLoaded', init); // Init Game
-form.addEventListener('submit', submitName); // Init Player
+form.addEventListener('submit', submitPlayerName); // Init Player
 
 
