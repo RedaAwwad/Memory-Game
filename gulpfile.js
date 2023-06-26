@@ -5,12 +5,11 @@ const source = require('vinyl-source-stream');
 const sourcemaps = require('gulp-sourcemaps');
 const buffer = require("vinyl-buffer");
 const terser = require("gulp-terser");
-const sass = require('gulp-sass')(require('sass'))
+const sass = require('gulp-sass')(require('sass'));
 const minifyCSS = require("gulp-clean-css");
 const autoprefixer = require("gulp-autoprefixer");
 const imagemin = require("gulp-imagemin");
-const { mozjpeg, optipng, svgo} = imagemin;
-const webp = require("gulp-webp");
+const { mozjpeg, optipng, svgo } = imagemin;
 const clean = require('gulp-clean');
 const rename = require("gulp-rename");
 const browserSync = require('browser-sync').create();
@@ -30,36 +29,36 @@ const PATHS = {
       'whatsapp', 'webcam',
       'wallet', 'vimeo',
       'usb', 'twitter'
-    ]
+    ];
     return bootstrapIconsToInclude.map(icon => {
-      return `./node_modules/bootstrap-icons/icons/${icon}.svg`
+      return `./node_modules/bootstrap-icons/icons/${icon}.svg`;
     });
   },
   sounds: './src/assets/sounds/*'
-}
+};
 
 // clean
 const cleanDist = () => {
-  return src(`${PATHS['dist']}/`, { 
-      allowEmpty: true, 
-      read: false 
-    })
+  return src(`${PATHS['dist']}/`, {
+    allowEmpty: true,
+    read: false
+  })
     .pipe(clean({ force: true }));
-}
+};
 
 // move html files
 const moveHTML = () => {
   return src(PATHS['html'], { allowEmpty: true })
     .pipe(dest(PATHS['dist']))
     .pipe(browserSync.stream());
-}
+};
 
 // move Sounds files
 const moveSounds = () => {
   return src(PATHS['sounds'], { allowEmpty: true })
     .pipe(dest(`${PATHS['dist']}/assets/sounds`))
     .pipe(browserSync.stream());
-}
+};
 
 // js
 const compileJS = () => {
@@ -70,13 +69,13 @@ const compileJS = () => {
     cache: {},
     packageCache: {},
   })
-  .plugin(tsify).on('error', (err) => {
-    console.error(err);
-  })
-  .transform("babelify", {
-    presets: ["es2015"],
-    extensions: [".ts"],
-  });
+    .plugin(tsify).on('error', (err) => {
+      console.error(err);
+    })
+    .transform("babelify", {
+      presets: ["es2015"],
+      extensions: [".ts"],
+    });
 
   return b.bundle()
     .pipe(source("main.bundle.js"))
@@ -86,15 +85,15 @@ const compileJS = () => {
     .pipe(sourcemaps.write())
     .pipe(dest(`${PATHS['dist']}/js`))
     .pipe(browserSync.stream());
-}
+};
 
 // sass
 const compileSass = () => {
   return src(PATHS['sass'], { allowEmpty: true })
     .pipe(sourcemaps.init())
     .pipe(sass())
-    .pipe(autoprefixer({ 
-      grid: 'autoplace' 
+    .pipe(autoprefixer({
+      grid: 'autoplace'
     }))
     .pipe(minifyCSS())
     .pipe(sourcemaps.write())
@@ -103,7 +102,7 @@ const compileSass = () => {
     }))
     .pipe(dest(`${PATHS['dist']}/css`))
     .pipe(browserSync.stream());
-}
+};
 
 // minify imgs
 const minifyImgs = () => {
@@ -121,20 +120,12 @@ const minifyImgs = () => {
             name: 'cleanupIDs',
             active: false
           }
-        ]})
-      ]))
+        ]
+      })
+    ]))
     .pipe(dest(`${PATHS['dist']}/assets/icons`))
     .pipe(browserSync.stream());
-}
-
-// transform imgs to webp ext.
-// const webpImgs = () => {
-//   let minifiedImgs = `${PATHS['dist']}/assets/icons`;
-//   return src(`${minifiedImgs}/*`, { allowEmpty: true })
-//     .pipe(webp())
-//     .pipe(dest(minifiedImgs))
-//     .pipe(browserSync.stream());
-// }
+};
 
 // watch
 const watchTasks = () => {
@@ -149,7 +140,7 @@ const watchTasks = () => {
   watch(PATHS['sass'], compileSass);
   watch('./src/js/**/*.ts', compileJS);
   watch(PATHS['imgs'], minifyImgs);
-}
+};
 
 // default
 exports.default = series(
@@ -159,7 +150,6 @@ exports.default = series(
   compileJS,
   compileSass,
   minifyImgs,
-  // webpImgs,
   watchTasks
 );
 
@@ -171,5 +161,4 @@ exports.build = series(
   compileSass,
   compileJS,
   minifyImgs,
-  // webpImgs
 );
